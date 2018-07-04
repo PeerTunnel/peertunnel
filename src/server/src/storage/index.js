@@ -12,9 +12,10 @@ class Storage extends Common {
   }
 
   async getCert () {
+    const self = this
     let save = async function () {
-      await this.write('cert.pem', Buffer.from(this.cert))
-      await this.write('key.pem', Buffer.from(this.key))
+      await self.write('cert.pem', Buffer.from(this.cert))
+      await self.write('key.pem', Buffer.from(this.key))
     }
     try {
       return {

@@ -17,12 +17,14 @@ module.exports = (shake, Request, Response, opt) => {
       return cb(null, res)
     }),
     write: (data, cb) => {
+      if (!cb) cb = () => {}
       pull(
         pull.values(Array.isArray(data) ? data : [data]),
         ppb.encode(Response),
         pull.collect((err, res) => {
           if (err) { return cb(err) }
           res.forEach(res => shake.write(res))
+          cb()
         })
       )
     }

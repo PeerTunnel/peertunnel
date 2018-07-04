@@ -39,8 +39,31 @@ peertunnel tunnel --suffix hello-world --port 3000
 
 ### Server
 
-> WIP
 
+#### Certificate
+
+First install acme.sh if not already installed:
+
+```sh
+$ curl https://get.acme.sh | sh
+```
+
+Then get a wildcard cert for the domain
+
+```sh
+# IMPORTANT: Setup dns provider first, see https://github.com/Neilpang/acme.sh/tree/master/dnsapi for more details
+$ acme.sh --issue --dns dns_PROVIDER -d peertunnel.example.com -d *.peertunnel.example.com
+```
+
+You now need to add the server to your current machines peertunnel config and give the peer admin access.
+
+Then install the cert on your server
+
+```sh
+$ acme.sh --install-cert -d peertunnel.example.com -d *.peertunnel.example.com --key-file /tmp/peertunnel.key.pem --fullchain-file /tmp/peertunnel.cert.pem --reloadcmd "peertunnel --server YOUR_SERVER admin cert-update /tmp/peertunnel.cert.pem /tmp/peertunnel.key.pem"
+```
+
+acme.sh will remember these settings and auto-update your cert. After the certificate setup your site should just work(TM).
 
 ## ToDos
 

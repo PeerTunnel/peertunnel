@@ -18,18 +18,16 @@ const userProps = {
   }
 }
 
-const adminProps = {
-
-}
-
 module.exports = function AdminRPC (pi, admins, main) {
-  const shake = handshake().handshake
+  const shake = handshake()
 
   const rpc = RPC(shake.handshake, AdminRequest, AdminResponse)
-  if (admins.indexOf(pi.id.toB58String()) !== -1) {
+  if (admins.indexOf(pi.id.toB58String()) === -1) {
+    log('admin rpc: UNAUTHORIZED ACCESS BY %s', pi.id.toB58String())
     return rpc.write({error: Error.NOT_AUTHORIZED})
   }
-  rpc.read(async (req) => {
+  rpc.read(async (err, req) => {
+    if (err) { return log(err) }
     try {
       log('admin rpc %s %s %s on %s', req.type, req.key, req.value, req.userId || '<GLOBAL>')
       if (req.userId) {
@@ -65,14 +63,17 @@ module.exports = function AdminRPC (pi, admins, main) {
         const settings = main.settings
         switch (req.type) {
           case OP.SET: {
-            const prop = adminProps[req.key]
-            if (!prop) {
-              return rpc.write({error: Error.MALFORMED})
-            }
-            if (!req.value) {
-              delete settings[req.key]
-            } else {
-              settings[req.key] = prop(req.value)
+            switch (req.key) {
+              case 'cert':
+              case 'key':
+                main.cert[req.key] = req.value
+                if (main.cert.cert && main.cert.key) { // eslint-disable-line
+                  await main.cert.save()
+                }
+                break
+              default: {
+                return rpc.write({error: Error.MALFORMED})
+              }
             }
 
             await settings.save()
@@ -86,6 +87,7 @@ module.exports = function AdminRPC (pi, admins, main) {
 
       return rpc.write({})
     } catch (e) {
+      log(e)
       return rpc.write({error: Error.OTHER})
     }
   })

@@ -9,6 +9,7 @@ const TLSServer = require('./server')
 
 const pull = require('pull-stream')
 const OpenRPC = require('./rpc/open')
+const AdminRPC = require('./rpc/admin')
 const multiaddr = require('multiaddr')
 
 class Server {
@@ -35,6 +36,17 @@ class Server {
         pull(
           conn,
           OpenRPC(pi, this),
+          conn
+        )
+      })
+    })
+    this.swarm.handle('/peertunnel/admin/1.0.0', (proto, conn) => {
+      conn.getPeerInfo((err, pi) => {
+        if (err) { return log(err) }
+
+        pull(
+          conn,
+          AdminRPC(pi, this.admins, this),
           conn
         )
       })

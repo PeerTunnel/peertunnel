@@ -12,10 +12,16 @@ const _instance = require('./common/instance')
 const instance = promisify(_instance)
 const createConfig = promisify(_instance.create)
 
+const Id = require('peer-id')
+const Peer = require('peer-info')
+const pull = require('pull-stream')
+const AdminRPC = require('./rpc/admin')
+
 class Peertunnel {
   constructor () {
     this.storage = new Storage(path.join(os.homedir(), '.peertunnel'))
     this.tunnels = new Tunnels(this)
+    this.admin = promisify(this.admin.bind(this))
   }
 
   async init () {
@@ -36,6 +42,29 @@ class Peertunnel {
   async stop () {
     await this.tunnels.stop()
     await promisify(this.swarm.stop.bind(this))()
+  }
+
+  async resolveServer (name) {
+    const id = (await this.storage.getServers()).names[name]
+    if (!id) {
+      throw new Error('Server ' + name + ' does not exist!')
+    }
+    const addrs = (await this.storage.getServer(id)).addrs
+    const peer = new Peer(Id.createFromB58String(id))
+    addrs.forEach(addr => peer.multiaddrs.add(addr))
+    return peer
+  }
+
+  admin (pi, req, cb) {
+    this.swarm.dialProtocol(pi, '/peertunnel/admin/1.0.0', (err, conn) => {
+      if (err) { return cb(err) }
+
+      pull(
+        conn,
+        AdminRPC(req, cb),
+        conn
+      )
+    })
   }
 }
 

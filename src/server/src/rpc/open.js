@@ -10,7 +10,7 @@ const ALLOWED_RE = /^[a-z0-9]$/
 const MAX_LEN = 16
 
 module.exports = function OpenRPC (pi, main) {
-  const shake = handshake().handshake
+  const shake = handshake()
 
   const rpc = RPC(shake.handshake, OpenRequest, OpenResponse)
   rpc.read(async (request) => {

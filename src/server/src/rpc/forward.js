@@ -5,7 +5,7 @@ const RPC = require('../../../common/rpc')
 const {ForwardRequest, ForwardResponse, ETABLE} = require('../../../common/proto')
 
 module.exports = function ForwardRPC (tunnel, remote, cb) {
-  const shake = handshake().handshake
+  const shake = handshake()
 
   const rpc = RPC(shake.handshake, ForwardResponse, ForwardRequest)
   rpc.write(tunnel, (err) => {

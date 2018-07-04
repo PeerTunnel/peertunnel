@@ -5,7 +5,7 @@ const RPC = require('../common/rpc')
 const {ForwardRequest, ForwardResponse, Error} = require('../common/proto')
 
 module.exports = function ForwardRPC (tunnels) {
-  const shake = handshake().handshake
+  const shake = handshake()
 
   const rpc = RPC(shake.handshake, ForwardRequest, ForwardResponse)
   rpc.read((data) => {

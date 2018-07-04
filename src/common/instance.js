@@ -22,13 +22,17 @@ class Node extends libp2p {
           new TCP(),
           new WS()
         ],
-        streamMuxer: [
+        connection: {
+          encryption: [SECIO],
+          muxer: [MPLEX, SPDY]
+        }
+        /* streamMuxer: [
           SPDY,
           MPLEX
         ],
         connEncryption: [
           SECIO
-        ]
+        ] */
       },
 
       // libp2p config options (typically found on a config.json)

@@ -5,7 +5,7 @@ const RPC = require('../common/rpc')
 const {OpenRequest, OpenResponse, ETABLE} = require('../common/proto')
 
 module.exports = function OpenRPC (suffix, handler, tunnels, cb) {
-  const shake = handshake().handshake
+  const shake = handshake()
 
   const rpc = RPC(shake.handshake, OpenResponse, OpenRequest)
   rpc.write({suffix}, (err) => {
