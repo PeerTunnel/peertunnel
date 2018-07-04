@@ -28,5 +28,7 @@ module.exports = {
     })
 
     console.error('Successfully updated cert & key!'.green)
+
+    tunnel.stop()
   }
 }

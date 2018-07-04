@@ -41,7 +41,7 @@ class Peertunnel {
 
   async stop () {
     await this.tunnels.stop()
-    await promisify(this.swarm.stop.bind(this))()
+    await promisify(this.swarm.stop.bind(this.swarm))()
   }
 
   async resolveServer (name) {
