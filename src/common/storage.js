@@ -39,13 +39,21 @@ class Storage {
     return read(this.locate(...p))
   }
 
-  async getStorable (...p) {
-    p[p.length - 1] += '.json'
-    return storable(this, p, await this.readJSON(...p))
-  }
-
   async readJSON (...p) {
     return JSON.parse(String(await this.read(...p)))
+  }
+
+  async getStorable (...p) {
+    p[p.length - 1] += '.json'
+    let data
+
+    try {
+      data = await this.readJSON(...p)
+    } catch (err) {
+      data = {}
+    }
+
+    return storable(this, p, data)
   }
 }
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const handshake = require('pull-handshake')
-const RPC = require('./')
+const RPC = require('../../../common/rpc')
 const {OpenRequest, OpenResponse, Error} = require('../../../common/proto')
 const crypto = require('crypto')
 const pull = require('pull-stream')

@@ -1,7 +1,7 @@
 'use strict'
 
 const handshake = require('pull-handshake')
-const RPC = require('./')
+const RPC = require('../../../common/rpc')
 const {ForwardRequest, ForwardResponse, ETABLE} = require('../../../common/proto')
 
 module.exports = function ForwardRPC (tunnel, remote, cb) {
