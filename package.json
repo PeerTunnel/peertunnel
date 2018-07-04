@@ -1,0 +1,27 @@
+{
+  "name": "peertunnel",
+  "version": "0.0.0",
+  "description": "A libp2p based localhost tunneling application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "libp2p",
+    "localhost",
+    "tunneling",
+    "p2p"
+  ],
+  "author": "Maciej Krüger <mkg20001@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "^3.8.2",
+    "libp2p": "^0.20.4",
+    "libp2p-mplex": "^0.7.0",
+    "libp2p-secio": "^0.10.0",
+    "libp2p-spdy": "^0.12.1",
+    "libp2p-tcp": "^0.12.0",
+    "libp2p-websockets": "^0.12.0",
+    "yargs": "^11.0.0"
+  }
+}
