@@ -20,7 +20,7 @@ class Peertunnel {
 
   async init () {
     if (fs.existsSync(this.storage.locate('config.json'))) {
-      console.error('Cannot overwrite %s! Please delete it manually!', this.storage.locate('config.json'))
+      console.error('Config %s already exists! Refusing to overwrite!', this.storage.locate('config.json'))
       process.exit(2)
     }
 
