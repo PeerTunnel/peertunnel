@@ -2,7 +2,7 @@
 
 const handshake = require('pull-handshake')
 const RPC = require('./')
-const {OpenRequest, OpenResponse, Error} = require('../proto')
+const {OpenRequest, OpenResponse, Error} = require('../../../common/proto')
 const crypto = require('crypto')
 const pull = require('pull-stream')
 

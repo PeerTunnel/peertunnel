@@ -4,7 +4,7 @@ const debug = require('debug')
 const log = debug('peertunnel:server:tunnels')
 const pull = require('pull-stream')
 
-const ForwardRPC = require('./rpc/forward')
+const ForwardRPC = require('../rpc/forward')
 
 class Tunnels {
   constructor ({main}) {
@@ -12,9 +12,10 @@ class Tunnels {
     this.store = {}
   }
 
-  createTunnel (id, pi, sec, keepOpen) {
+  createTunnel (id, pi, forwardSecret, keepOpen) {
     log('create tunnel %s', id)
-    this.store[id] = {pi, sec, keepOpen}
+    let address = id + '.' + this.main.zone
+    this.store[id] = {pi, address, forwardSecret, keepOpen}
   }
 
   gc () {
