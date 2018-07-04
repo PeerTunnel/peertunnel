@@ -6,7 +6,7 @@ const WS = require('libp2p-websockets')
 const SPDY = require('libp2p-spdy')
 const MPLEX = require('libp2p-mplex')
 const SECIO = require('libp2p-secio')
-const defaultsDeep = require('@nodeutils/defaults-deep')
+// const defaultsDeep = require('@nodeutils/defaults-deep')
 const Id = require('peer-id')
 const Peer = require('peer-info')
 
@@ -19,8 +19,8 @@ class Node extends libp2p {
       // The libp2p modules for this libp2p bundle
       modules: {
         transport: [
-          TCP,
-          WS
+          new TCP(),
+          new WS()
         ],
         streamMuxer: [
           SPDY,
@@ -52,7 +52,8 @@ class Node extends libp2p {
     }
 
     // overload any defaults of your bundle using https://github.com/nodeutils/defaults-deep
-    super(defaultsDeep(_options, defaults))
+    // super(defaultsDeep(_options, defaults))
+    super(defaults.modules, defaults.peerInfo, defaults.peerBook, defaults.config)
   }
 }
 
