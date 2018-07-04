@@ -28,7 +28,10 @@ class TLSServer {
       if (zone.user) {
         // open a tunnel
         const conn = toPull(secureSocket)
-        pull(conn, this.main.tunnels.requestTunnel(zone.user, { voidOnError: true }), conn) // the complete magic of this thing
+        this.main.tunnels.requestTunnel(zone.user, { voidOnError: true }, (err, remote) => { // the complete magic of this thing
+          if (err) { return log(err) } // shouldn't happen because voidOnError
+          pull(conn, remote, conn)
+        })
       } else if (zone.main) {
         // TODO: if (http.wsUpgrade) connectToSwarmViaWS() else if (http) showHomepage() else drop()
       } else {
