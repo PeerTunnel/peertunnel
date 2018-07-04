@@ -57,6 +57,6 @@ Instance(conf, {addrs: ['/ip4/127.0.0.1/tcp/32894']}, (err, swarm) => {
   conf.swarm = swarm
   let server = new Server(conf)
   server.start().then(() => {
-    server.swarm.peerInfo.multiaddrs.toArray().map(String).forEach(addr => console.log('Listening on %s', addr))
+    server.swarm.peerInfo.multiaddrs.toArray().map(String).concat(['https://' + conf.zone + ':' + server.server.server.address().port]).forEach(addr => console.log('Listening on %s', addr))
   }, err => die('Starting server failed: %s', err.stack))
 })
