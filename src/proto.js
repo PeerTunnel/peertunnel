@@ -15,9 +15,8 @@ enum Error {
 
 
 message Tunnel {
-  required string id   = 1;
-  string forwardSecret = 2;
-  string address       = 3; // hostname only, https://HOSTNAME
+  required string forwardSecret = 1; // a secret used to auth if the request really is from the server (cannot use peer-id once there are load-balancers)
+  required string address       = 2; // hostname only, basically the uppercase part of this: https://HOSTNAME
 }
 
 message Remote {

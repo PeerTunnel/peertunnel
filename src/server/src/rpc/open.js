@@ -11,6 +11,7 @@ const MAX_LEN = 16
 
 module.exports = function OpenRPC (pi, main) {
   const shake = handshake().handshake
+
   const rpc = RPC(shake.handshake, OpenRequest, OpenResponse)
   rpc.read(async (request) => {
     let user
@@ -25,7 +26,7 @@ module.exports = function OpenRPC (pi, main) {
     let address = user.username
 
     if (suffix) {
-      if (!suffix.match(ALLOWED_RE) || suffix.length < MAX_LEN) {
+      if (!suffix.match(ALLOWED_RE) || suffix.length > MAX_LEN) {
         return rpc.write({error: Error.MALFORMED})
       }
 
@@ -46,4 +47,6 @@ module.exports = function OpenRPC (pi, main) {
       pull.onEnd(() => (online = false))
     )
   })
+
+  return shake
 }

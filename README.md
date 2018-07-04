@@ -40,3 +40,16 @@ peertunnel tunnel --suffix hello-world --port 3000
 ### Server
 
 > WIP
+
+
+## ToDos
+
+- [ ] Make it work
+  - [ ] Server
+  - [ ] Client
+    - [ ] User CMDs
+    - [ ] Admin CMDs
+  - [ ] Tests
+- [ ] Use DIDs for Auth
+- [ ] Use peer-star / orbitdb / other storage for a replicated p2p db storage
+- [ ] Add load-balancing
