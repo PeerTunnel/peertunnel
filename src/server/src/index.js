@@ -5,15 +5,18 @@ const log = debug('peertunnel:server')
 
 const Storage = require('./storage')
 const Tunnels = require('./tunnels')
+const TLSServer = require('./server')
 
 const pull = require('pull-stream')
 const OpenRPC = require('./rpc/open')
+const multiaddr = require('multiaddr')
 
 class Server {
-  constructor ({storage, swarm, admins, zone}) {
+  constructor ({storage, publicAddr, swarm, admins, zone}) {
     this.swarm = swarm
     this.storage = new Storage(storage)
     this.tunnels = new Tunnels(this)
+    this.server = new TLSServer({addr: multiaddr(publicAddr), main: this})
     this.admins = admins
     this.zone = zone
     this.zoneRe = new RegExp('^([a-z0-9_]\\.){0,1}' + zone + '$')
@@ -24,6 +27,7 @@ class Server {
   async start () {
     this.settings = await this.storage.getGlobal()
     this.cert = await this.storage.getCert()
+    await this.server.start()
     this.swarm.handle('/peertunnel/open/1.0.0', (proto, conn) => {
       conn.getPeerInfo((err, pi) => {
         if (err) { return log(err) }

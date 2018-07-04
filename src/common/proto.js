@@ -54,7 +54,7 @@ message AdminRequest {
   OP type = 1;
   string key = 2;
   bytes value = 3; // if (OP === SET && !value) "reset key to default"
-  userId = 4;
+  string userId = 4;
 }
 
 message AdminResponse {
