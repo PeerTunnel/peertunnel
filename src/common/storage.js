@@ -1,6 +1,6 @@
 'use strict'
 
-const { Map } = require('immutable')
+// const { Map } = require('immutable')
 const path = require('path')
 const fs = require('fs')
 const { promisify } = require('util')
@@ -9,8 +9,10 @@ const read = promisify(fs.readFile)
 const mkdirp = promisify(require('mkdirp'))
 
 const storable = (storage, path, obj) => {
-  const store = Map(obj)
-  store.save = () => storage.writeJSON(...path, store.toJS())
+  // const store = Map(obj)
+  const store = obj
+  // store.save = () => storage.writeJSON(...path, store.toJS())
+  store.save = () => storage.writeJSON(...path, store)
   store.id = path.join('.').replace(/\.json$/, '')
 }
 

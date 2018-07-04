@@ -6,7 +6,7 @@ const {OpenRequest, OpenResponse, Error} = require('../../../common/proto')
 const crypto = require('crypto')
 const pull = require('pull-stream')
 
-const ALLOWED_RE = /^[a-z0-9]$/gmi
+const ALLOWED_RE = /^[a-z0-9]$/
 const MAX_LEN = 16
 
 module.exports = function OpenRPC (pi, main) {

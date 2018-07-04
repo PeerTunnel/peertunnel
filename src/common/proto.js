@@ -44,6 +44,23 @@ message ForwardResponse {
   Error error = 1;
 }
 
+enum OP {
+  ADD = 1;
+  SET = 2;
+  DEL = 3;
+}
+
+message AdminRequest {
+  OP type = 1;
+  string key = 2;
+  bytes value = 3; // if (OP === SET && !value) "reset key to default"
+  userId = 4;
+}
+
+message AdminResponse {
+  Error error = 1;
+}
+
 `)
 
 P.ETABLE = {

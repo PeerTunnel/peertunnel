@@ -50,6 +50,7 @@ peertunnel tunnel --suffix hello-world --port 3000
     - [ ] User CMDs
     - [ ] Admin CMDs
   - [ ] Tests
+- [ ] Add bandwith quotas
 - [ ] Use DIDs for Auth
 - [ ] Use peer-star / orbitdb / other storage for a replicated p2p db
 - [ ] Add load-balancing
