@@ -12,9 +12,9 @@ class Tunnels {
     this.store = {}
   }
 
-  createTunnel (id, pi, keepOpen) {
+  createTunnel (id, pi, sec, keepOpen) {
     log('create tunnel %s', id)
-    this.store[id] = {pi, keepOpen}
+    this.store[id] = {pi, sec, keepOpen}
   }
 
   gc () {

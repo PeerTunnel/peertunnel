@@ -4,6 +4,7 @@ const debug = require('debug')
 const log = debug('peertunnel:server')
 
 const Storage = require('./storage')
+const Tunnels = require('./tunnels')
 
 const pull = require('pull-stream')
 const OpenRPC = require('./rpc/open')
@@ -12,6 +13,7 @@ class Server {
   constructor ({storage, swarm, admins, zone}) {
     this.swarm = swarm
     this.storage = new Storage(storage)
+    this.tunnels = new Tunnels(this)
     this.admins = admins
     this.zone = zone
     this.zoneRe = new RegExp('^([a-z0-9_]\\.){0,1}' + zone + '$')
@@ -28,7 +30,7 @@ class Server {
 
         pull(
           conn,
-          OpenRPC(pi),
+          OpenRPC(pi, this),
           conn
         )
       })
