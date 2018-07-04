@@ -24,7 +24,7 @@ class Peertunnel {
       process.exit(2)
     }
 
-    await this.storage.writeJSON('config.json', await createConfig())
+    await this.storage.write('config.json', JSON.stringify(await createConfig(), null, 2))
   }
 
   async start () {

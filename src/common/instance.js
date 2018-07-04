@@ -71,4 +71,4 @@ module.exports = (config, def, cb) => {
   })
 }
 
-module.exports.create = (cb) => Id.create(cb)
+module.exports.create = (cb) => Id.create((err, id) => cb(err, {id}))
