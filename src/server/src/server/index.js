@@ -6,6 +6,7 @@ const toPull = require('stream-to-pull-stream')
 const debug = require('debug')
 const log = debug('peertunnel:server:tlsserver')
 const pull = require('pull-stream')
+const SSLConfig = require('ssl-config')('modern')
 
 // We have to use a normal net server and upgrade conns to tls in order to associate conn and hostname
 
@@ -40,22 +41,29 @@ class TLSServer {
       }
     }
 
-    const secureSocket = new tls.TLSSocket(socket, {
-      isServer: true,
-      SNICallback (hostname, cb) {
-        if (!this.main.isInZone(hostname)) {
-          return cb(new Error(hostname + ' outside of our zone!'))
-        }
+    const SNICallback = (hostname, cb) => {
+      log('do sni for %s', hostname)
 
-        secureSocket.zone = {
-          hostname,
-          user: hostname.match(this.main.zoneUserRe) && hostname.match(this.main.zoneUserRe)[1],
-          main: Boolean(hostname.match(this.main.zoneMainRe))
-        }
-
-        cb(null, tls.createSecureContext(this.main.cert)) // TODO: use modern-ssl config
+      if (!this.main.isInZone(hostname)) {
+        return cb(new Error(hostname + ' is outside of our zone!'))
       }
-    })
+
+      secureSocket.zone = {
+        hostname,
+        user: hostname.match(this.main.zoneUserRe) && hostname.match(this.main.zoneUserRe)[1],
+        main: Boolean(hostname.match(this.main.zoneMainRe))
+      }
+
+      log('socket %o', secureSocket.zone)
+
+      cb(null, tls.createSecureContext(this.main.cert))
+    }
+
+    const secureSocket = new tls.TLSSocket(socket, Object.assign({
+      isServer: true,
+      server: this.server,
+      SNICallback
+    }, SSLConfig))
 
     // Avoid uncaught errors caused by unstable connections
     socket.on('error', log)
