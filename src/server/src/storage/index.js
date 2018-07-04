@@ -4,11 +4,11 @@ const Common = require('../../../common/storage')
 
 class Storage extends Common {
   getUser (id) {
-    return this.getStorable('users', id)
+    return this.getStorable('users', id, {})
   }
 
   getGlobal () {
-    return this.getStorable('global')
+    return this.getStorable('global', {})
   }
 
   async getCert () {

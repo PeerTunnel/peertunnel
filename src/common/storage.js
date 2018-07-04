@@ -13,7 +13,10 @@ const storable = (storage, path, obj) => {
   const store = obj
   // store.save = () => storage.writeJSON(...path, store.toJS())
   store.save = () => storage.writeJSON(...path, store)
+  store.delete = () => fs.unlinkSync(storage.locate(...path))
   store.id = path.join('.').replace(/\.json$/, '')
+
+  return store
 }
 
 class Storage {
@@ -46,13 +49,14 @@ class Storage {
   }
 
   async getStorable (...p) {
+    const def = p.pop()
     p[p.length - 1] += '.json'
     let data
 
     try {
       data = await this.readJSON(...p)
     } catch (err) {
-      data = {}
+      data = def
     }
 
     return storable(this, p, data)

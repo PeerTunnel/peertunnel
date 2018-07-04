@@ -4,6 +4,11 @@
 
 /* eslint-disable no-console */
 
+require('colors')
+console.die = (...a) => {
+  console.error(('ERROR: ' + a[0]).red.bold, ...a.slice(1))
+  process.exit(2)
+}
 const yargs = require('yargs')
 const updateNotifier = require('update-notifier')
 const readPkgUp = require('read-pkg-up')

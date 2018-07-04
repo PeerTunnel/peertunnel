@@ -22,7 +22,7 @@ const adminProps = {
 
 }
 
-module.exports = function OpenRPC (pi, admins, main) {
+module.exports = function AdminRPC (pi, admins, main) {
   const shake = handshake().handshake
 
   const rpc = RPC(shake.handshake, AdminRequest, AdminResponse)
