@@ -2,11 +2,11 @@
 
 const { Map } = require('immutable')
 const path = require('path')
-const mkdirp = require('mkdirp')
 const fs = require('fs')
 const { promisify } = require('util')
 const write = promisify(fs.writeFile)
 const read = promisify(fs.readFile)
+const mkdirp = promisify(require('mkdirp'))
 
 const storable = (storage, path, obj) => {
   const store = Map(obj)
@@ -20,7 +20,7 @@ class Storage {
   }
 
   locate (...p) {
-    path.join(this.dir, ...p)
+    return path.join(this.dir, ...p)
   }
 
   async write (...p) {

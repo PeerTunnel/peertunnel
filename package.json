@@ -27,6 +27,8 @@
     "mkdirp": "^0.5.1",
     "pull-protocol-buffers": "^0.1.2",
     "raven": "^2.6.3",
+    "read-pkg-up": "^3.0.0",
+    "update-notifier": "^2.5.0",
     "yargs": "^11.0.0"
   }
 }

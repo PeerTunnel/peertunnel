@@ -71,4 +71,4 @@ module.exports = (config, def, cb) => {
   })
 }
 
-module.exports.create = Id.createFromJSON.bind(Id)
+module.exports.create = (cb) => Id.create(cb)
