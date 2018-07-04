@@ -19,8 +19,8 @@ class Server {
     this.server = new TLSServer({addr: multiaddr(publicAddr), main: this})
     this.admins = admins
     this.zone = zone
-    this.zoneRe = new RegExp('^(([a-z0-9])+\\.){0,1}' + zone + '$')
-    this.zoneUserRe = new RegExp('^([a-z0-9])+\\.' + zone + '$')
+    this.zoneRe = new RegExp('^([a-z0-9]+\\.){0,1}' + zone + '$')
+    this.zoneUserRe = new RegExp('^([a-z0-9]+)\\.' + zone + '$')
     this.zoneMainRe = new RegExp('^' + zone + '$')
   }
 
