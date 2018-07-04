@@ -17,9 +17,12 @@ module.exports = {
 
     const list = []
 
-    for (const name in servers.names) {
+    for (let name in servers.names) {
       if (name) {
         const id = servers.names[name]
+        if (servers.default === id) {
+          name += ' (default)'
+        }
         const addresses = (await storage.getServer(id)).addrs.join(', ')
         list.push({name, id, addresses})
       }
