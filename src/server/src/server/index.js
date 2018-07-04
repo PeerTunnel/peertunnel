@@ -4,7 +4,7 @@ const tls = require('tls')
 const net = require('net')
 const toPull = require('stream-to-pull-stream')
 const debug = require('debug')
-const log = debug('peertunnel:server:tlsserver')
+const Log = debug('peertunnel:server:tlsserver')
 const pull = require('pull-stream')
 const SSLConfig = require('ssl-config')('modern')
 
@@ -18,6 +18,9 @@ class TLSServer {
   }
 
   handler (socket) {
+    const prefix = 'socket#' + Math.random().toString().replace(/[.0]/gmi, '').substr(0, 5) + ' '
+    const log = (...a) => Log(prefix + a[0], ...a.slice(1))
+
     const next = async () => {
       const { zone } = secureSocket
 
@@ -25,6 +28,8 @@ class TLSServer {
         log('error: no zone for socket, drop')
         return secureSocket.destroy()
       }
+
+      log('continue')
 
       if (zone.user) {
         // open a tunnel
@@ -35,6 +40,7 @@ class TLSServer {
         })
       } else if (zone.main) {
         // TODO: if (http.wsUpgrade) connectToSwarmViaWS() else if (http) showHomepage() else drop()
+        log('TBD: main')
       } else {
         log('error: zone invalid, drop')
         return secureSocket.destroy()
@@ -42,7 +48,7 @@ class TLSServer {
     }
 
     const SNICallback = (hostname, cb) => {
-      log('do sni for %s', hostname)
+      log('do SNI for %s', hostname)
 
       if (!this.main.isInZone(hostname)) {
         return cb(new Error(hostname + ' is outside of our zone!'))
@@ -56,6 +62,8 @@ class TLSServer {
 
       log('socket %o', secureSocket.zone)
 
+      setImmediate(next) // HACK: TODO: figure out why secureConnect isn't firing
+
       cb(null, tls.createSecureContext(this.main.cert))
     }
 
@@ -68,7 +76,7 @@ class TLSServer {
     // Avoid uncaught errors caused by unstable connections
     socket.on('error', log)
     secureSocket.on('error', log)
-    secureSocket.once('secureConnect', next)
+    secureSocket.on('secureConnect', next)
   }
 
   async start () {

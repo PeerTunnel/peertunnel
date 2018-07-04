@@ -30,13 +30,15 @@ class Tunnels {
   requestTunnel (id, opt, cb) {
     if (opt && opt.voidOnError) {
       const _void = {
-        source: pull.values([]),
-        sink: pull.drain(() => {})
+        source: (end, cb) => cb(end || true),
+        sink: (read) => read(true)
       }
 
       const _cb = cb
       cb = (err, conn) => err ? _cb(null, _void) : _cb(null, conn) // should be "conn || _void", but linter....
     }
+
+    log('requesting tunnel %s', id)
 
     const tunnel = this.store[id]
 
@@ -46,7 +48,7 @@ class Tunnels {
     }
 
     if (!tunnel) {
-      throw new Error('Tunnel ' + id + 'missing!')
+      return cb(new Error('Tunnel ' + id + ' missing!'))
     }
 
     const conn = this.main.swarm.dialProtocol(tunnel.pi, '/peertunnel/forward/1.0.0')
