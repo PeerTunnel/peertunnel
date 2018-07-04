@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@nodeutils/defaults-deep": "^1.1.0",
+    "console.table": "^0.10.0",
     "immutable": "^3.8.2",
     "libp2p": "^0.20.4",
     "libp2p-mplex": "^0.7.0",
