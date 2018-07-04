@@ -30,8 +30,14 @@ if (config.genconf) {
   Id.create((err, id) => {
     if (err) { die('Failed to create ID: %s', id) }
     fs.writeFileSync(config.config, JSON.stringify({
-      id: id.toJSON()
+      id: id.toJSON(),
+      storage: process.cwd(),
+      admins: ['QmYourId'],
+      publicAddr: '/ip4/0.0.0.0/tcp/443',
+      zone: 'peertunnel.example.com'
     }, null, 2))
+    console.log('Created!')
+    console.log('IMPORTANT: You need to edit this config before using it! Using the defaults will not work!')
   })
   return
 }
