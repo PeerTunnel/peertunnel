@@ -58,7 +58,7 @@ if (!conf.id) { die('Config format error: No PeerId (.id) found!') }
 const Raven = require('raven')
 Raven.config().install()
 
-Instance(conf, {addrs: ['/ip4/127.0.0.1/tcp/32894']}, (err, swarm) => {
+Instance(conf, {addrs: ['/ip4/0.0.0.0/tcp/32894']}, (err, swarm) => {
   if (err) { die('Cannot create swarm: %s', err) }
   conf.swarm = swarm
   let server = new Server(conf)
