@@ -22,8 +22,8 @@
     "@nodeutils/defaults-deep": "^1.1.0",
     "console.table": "^0.10.0",
     "immutable": "^3.8.2",
-    "libp2p": "^0.20.4",
-    "libp2p-mplex": "^0.7.0",
+    "libp2p": "^0.22.0",
+    "libp2p-mplex": "^0.8.0",
     "libp2p-secio": "^0.10.0",
     "libp2p-spdy": "^0.12.1",
     "libp2p-tcp": "^0.12.0",
@@ -32,10 +32,10 @@
     "mkdirp": "^0.5.1",
     "pull-protocol-buffers": "^0.1.2",
     "raven": "^2.6.3",
-    "read-pkg-up": "^3.0.0",
+    "read-pkg-up": "^4.0.0",
     "ssl-config": "^1.0.0",
     "update-notifier": "^2.5.0",
-    "yargs": "^11.0.0"
+    "yargs": "^12.0.1"
   },
   "devDependencies": {},
   "repository": {
