@@ -18,6 +18,20 @@ const userProps = {
   }
 }
 
+/*
+
+ToDos:
+This admin API is a quick-and-dirty hack.
+
+Things to change:
+ - Make the protocol more intuitive
+ - Check if username is already in DB on rename
+ - Maybe split up methods
+ - Don't create users through changes (currently set-username is the same as add)
+ - Better errors (MALFORMED and OTHER are too generic)
+
+*/
+
 module.exports = function AdminRPC (pi, admins, main) {
   const shake = handshake()
 
@@ -36,6 +50,8 @@ module.exports = function AdminRPC (pi, admins, main) {
           case OP.ADD: {
             let offset = rand(1, 5)
             user.username = req.userId.substr(2 + offset, 18 + offset).toLowerCase()
+
+            await user.save()
             break
           }
           case OP.SET: {
@@ -43,16 +59,22 @@ module.exports = function AdminRPC (pi, admins, main) {
             if (!prop) {
               return rpc.write({error: Error.MALFORMED})
             }
-            if (!req.value) {
-              delete user[req.key]
-            } else {
-              user[req.key] = prop(req.value)
+            switch (req.key) {
+              case 'username': {
+                let offset = rand(1, 5)
+                user.username = userProps.username(req.value) || req.userId.substr(2 + offset, 18 + offset).toLowerCase()
+                break
+              }
+              default: {
+                return rpc.write({error: Error.MALFORMED})
+              }
             }
 
             await user.save()
             break
           }
           case OP.DEL: {
+            if (user.username) await user.delete() // q'n'd check if user is defined and delete if it is
             break
           }
           default: {
