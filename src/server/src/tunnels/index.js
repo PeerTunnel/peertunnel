@@ -7,15 +7,17 @@ const pull = require('pull-stream')
 const ForwardRPC = require('../rpc/forward')
 
 class Tunnels {
-  constructor ({main}) {
+  constructor (main) {
     this.main = main // TODO: circular reference
     this.store = {}
   }
 
   createTunnel (id, pi, forwardSecret, keepOpen) {
     log('create tunnel %s', id)
-    let address = id + '.' + this.main.zone
-    this.store[id] = {pi, address, forwardSecret, keepOpen}
+    const address = id + '.' + this.main.zone
+    const tunnel = {pi, address, forwardSecret, keepOpen}
+    this.store[id] = tunnel
+    return tunnel
   }
 
   gc () {
@@ -51,13 +53,16 @@ class Tunnels {
       return cb(new Error('Tunnel ' + id + ' missing!'))
     }
 
-    const conn = this.main.swarm.dialProtocol(tunnel.pi, '/peertunnel/forward/1.0.0')
+    this.main.swarm.dialProtocol(tunnel.pi, '/peertunnel/forward/1.0.0', (err, conn) => {
+      log(err, conn)
+      if (err) { return cb(err) }
 
-    pull(
-      conn,
-      ForwardRPC(tunnel, opt && opt.remote, cb),
-      conn
-    )
+      pull(
+        conn,
+        ForwardRPC(tunnel, opt && opt.remote, cb),
+        conn
+      )
+    })
   }
 }
 

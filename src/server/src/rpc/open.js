@@ -13,7 +13,10 @@ module.exports = function OpenRPC (pi, main) {
   const shake = handshake()
 
   const rpc = RPC(shake.handshake, OpenRequest, OpenResponse)
-  rpc.read(async (request) => {
+
+  const _ = async () => { // TODO: find a better way to wrap this (maybe create a function that also creates the RPC?)
+    const request = await rpc.read()
+
     let user
     try {
       user = await main.storage.getUser(pi.id.toB58String())
@@ -35,18 +38,21 @@ module.exports = function OpenRPC (pi, main) {
 
     let secret = crypto.randomBytes(16).toString('hex') // forward secret
 
-    let online = false
+    let online = true
 
-    main.tunnels.createTunnel(address, pi, secret, () => online)
+    const tunnel = main.tunnels.createTunnel(address, pi, secret, () => online)
 
-    const conn = shake.rest()
+    await rpc.write({tunnel})
+
+    const conn = shake.handshake.rest()
 
     pull(
-      pull.values([]),
+      (end, cb) => {},
       conn,
       pull.onEnd(() => (online = false))
     )
-  })
+  }
+  _()
 
   return shake
 }

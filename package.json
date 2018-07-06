@@ -30,6 +30,7 @@
     "libp2p-websockets": "^0.12.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
+    "promisify-es6": "^1.0.3",
     "pull-protocol-buffers": "^0.1.2",
     "raven": "^2.6.3",
     "read-pkg-up": "^4.0.0",

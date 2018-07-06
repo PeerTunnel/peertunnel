@@ -21,7 +21,7 @@ class Tunnels {
   }
 
   createTunnel (pi, suffix, handler, cb) {
-    this.main.swarm.dialProtocol(pi, '/peerinfo/open/1.0.0', (err, conn) => {
+    this.main.swarm.dialProtocol(pi, '/peertunnel/open/1.0.0', (err, conn) => {
       if (err) { return cb(err) }
 
       pull(

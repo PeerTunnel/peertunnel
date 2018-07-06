@@ -8,16 +8,22 @@ module.exports = function OpenRPC (suffix, handler, tunnels, cb) {
   const shake = handshake()
 
   const rpc = RPC(shake.handshake, OpenResponse, OpenRequest)
-  rpc.write({suffix}, (err) => {
-    if (err) { return cb(err) }
-    rpc.read((result) => {
+
+  const _ = async () => {
+    try {
+      await rpc.write({suffix})
+      const result = await rpc.read()
+
       if (result.error) { return cb(new Error('Server returned error: ' + ETABLE[result.error])) }
       result.tunnel.handler = handler
       tunnels.store[result.tunnel.forwardSecret] = result.tunnel
 
-      return cb()
-    })
-  })
+      cb()
+    } catch (e) {
+      return cb(e)
+    }
+  }
+  _()
 
   return shake
 }

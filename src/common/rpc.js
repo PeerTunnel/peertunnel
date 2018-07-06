@@ -3,10 +3,11 @@
 const lp = require('pull-length-prefixed')
 const pull = require('pull-stream')
 const ppb = require('pull-protocol-buffers')
+const promisify = require('promisify-es6')
 
 module.exports = (shake, Request, Response, opt) => {
   return {
-    read: (cb) => lp.decodeFromReader(shake, opt || {}, (err, data) => {
+    read: promisify((cb) => lp.decodeFromReader(shake, opt || {}, (err, data) => {
       if (err) { return cb(err) }
       let res
       try {
@@ -15,9 +16,8 @@ module.exports = (shake, Request, Response, opt) => {
         return cb(err)
       }
       return cb(null, res)
-    }),
-    write: (data, cb) => {
-      if (!cb) cb = () => {}
+    })),
+    write: promisify((data, cb) => {
       pull(
         pull.values(Array.isArray(data) ? data : [data]),
         ppb.encode(Response),
@@ -27,6 +27,6 @@ module.exports = (shake, Request, Response, opt) => {
           cb()
         })
       )
-    }
+    })
   }
 }

@@ -35,7 +35,6 @@ class Peertunnel {
 
   async start () {
     this.swarm = await instance(await this.storage.readJSON('config.json'), {addrs: ['/ip4/0.0.0.0/tcp/0']})
-    this.server = this.storage.getServers()
     await this.tunnels.start()
   }
 
