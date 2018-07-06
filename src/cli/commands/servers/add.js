@@ -38,5 +38,7 @@ module.exports = {
     await server.save()
 
     console.error('Successfully added %s!'.green, name.bold)
+
+    tunnel.stop()
   }
 }

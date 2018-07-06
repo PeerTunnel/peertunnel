@@ -54,8 +54,10 @@ class Tunnels {
     }
 
     this.main.swarm.dialProtocol(tunnel.pi, '/peertunnel/forward/1.0.0', (err, conn) => {
-      log(err, conn)
-      if (err) { return cb(err) }
+      if (err) {
+        log(err)
+        return cb(err)
+      }
 
       pull(
         conn,

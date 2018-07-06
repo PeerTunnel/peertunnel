@@ -29,5 +29,7 @@ module.exports = {
     await servers.save()
 
     console.error('Successfully removed server %s!'.green, name.bold)
+
+    tunnel.stop()
   }
 }

@@ -29,5 +29,7 @@ module.exports = {
     await servers.save()
 
     console.error('Successfully renamed %s to %s!'.green, prevName.bold, newName.bold)
+
+    tunnel.stop()
   }
 }

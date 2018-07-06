@@ -29,5 +29,7 @@ module.exports = {
     }
 
     console.table(list)
+
+    tunnel.stop()
   }
 }

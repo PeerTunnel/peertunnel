@@ -20,13 +20,15 @@ module.exports = {
     const tcp = new TCP()
     const addr = multiaddr('/ip4/' + (host || '127.0.0.1') + '/tcp/' + port) // TODO: make this more flexible
     const handler = (conn, remote) => { // TODO: handle connection errors
-      console.log('Incoming conn: %o', remote)
+      console.log('Incoming connection: %o'.blue.bold, remote || '<unknown remote address>')
       pull(conn, tcp.dial(addr), conn)
     }
-    tunnel.tunnels.createTunnel(pi, suffix, handler, (err) => {
+    tunnel.tunnels.createTunnel(pi, suffix, handler, (err, tunnel) => {
       if (err) {
         console.die('Failed to open tunnel: %s', err)
       }
+
+      console.log('Tunnel %s now open!'.green, ('https://' + tunnel.address).bold)
     })
   }
 }

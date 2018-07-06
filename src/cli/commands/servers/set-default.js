@@ -24,5 +24,7 @@ module.exports = {
     await servers.save()
 
     console.error('Successfully changed default server to %s!'.green, name.bold)
+
+    tunnel.stop()
   }
 }

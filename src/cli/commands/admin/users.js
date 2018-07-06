@@ -11,5 +11,6 @@ module.exports = {
 
   handler (argv) {
     console.log('Type `peertunnel admin users --help` for more instructions')
+    argv.tunnel.stop()
   }
 }
