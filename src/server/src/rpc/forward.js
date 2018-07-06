@@ -1,26 +1,17 @@
 'use strict'
 
-const handshake = require('pull-handshake')
+const debug = require('debug')
+const log = debug('peertunnel:rpc:forward')
+
 const RPC = require('../../../common/rpc')
 const {ForwardRequest, ForwardResponse, ETABLE} = require('../../../common/proto')
 
-module.exports = function ForwardRPC (tunnel, remote, cb) {
-  const shake = handshake()
+module.exports = RPC(ForwardResponse, ForwardRequest, async (rpc, tunnel, remote) => {
+  log('requesting tunnel %s', tunnel.address)
+  await rpc.write({tunnel})
 
-  const rpc = RPC(shake.handshake, ForwardResponse, ForwardRequest)
+  const resp = await rpc.read()
+  if (resp.error) { throw new Error('Client returned error: ' + ETABLE[resp.error]) }
 
-  const _ = async () => {
-    console.log('do req')
-    try {
-      await rpc.write(tunnel)
-      const resp = await rpc.read()
-      if (resp.error) { return cb(new Error('Client returned error: ' + ETABLE[resp.error])) }
-      return cb(null, shake.rest())
-    } catch (e) {
-      return cb(e)
-    }
-  }
-  _()
-
-  return shake
-}
+  return rpc.rest()
+})
