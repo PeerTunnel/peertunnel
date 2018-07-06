@@ -7,6 +7,7 @@ const promisify = require('promisify-es6')
 const handshake = require('pull-handshake')
 const debug = require('debug')
 const log = debug('peertunnel:rpc')
+const {Error} = require('./proto')
 
 function wrapper (shake, Recieve, Send, opt) {
   let done = false
@@ -54,7 +55,14 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
     }
 
     if (cb) { cb(null, res) }
-  }).catch((err) => cb ? cb(err) : log(err))
+  }).catch((err) => {
+    if (cb) {
+      cb(err)
+    } else {
+      log(err)
+      if (!rpc.done()) { rpc.write({error: Error.OTHER}) } // if no cb assume we are server and send error via rpc
+    }
+  })
 
   return stream
 }
