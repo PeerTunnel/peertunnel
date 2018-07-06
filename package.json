@@ -57,5 +57,8 @@
   "bugs": {
     "url": "https://github.com/mkg20001/peertunnel/issues"
   },
-  "homepage": "https://github.com/mkg20001/peertunnel#readme"
+  "homepage": "https://github.com/mkg20001/peertunnel#readme",
+  "contributors": [
+    "Maciej Krüger <mkg20001@gmail.com>"
+  ]
 }
