@@ -4,7 +4,6 @@
 
 const TCP = require('libp2p-tcp')
 const multiaddr = require('multiaddr')
-const pull = require('pull-stream')
 const promisify = require('promisify-es6')
 
 module.exports = {
