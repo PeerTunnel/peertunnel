@@ -33,7 +33,7 @@ module.exports = RPC(OpenRequest, OpenResponse, async (rpc, pi, main) => {
       return rpc.write({error: Error.MALFORMED})
     }
 
-    address = suffix + '-' + address
+    address = address + '-' + suffix
   }
 
   let secret = crypto.randomBytes(16).toString('hex') // forward secret
