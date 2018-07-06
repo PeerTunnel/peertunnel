@@ -20,8 +20,9 @@ message Tunnel {
 }
 
 message Remote {
-  string ip  = 1;
-  int64 port = 2;
+  required string address = 1;
+  required int64 port     = 2;
+  string family  = 3;
 }
 
 
@@ -37,7 +38,7 @@ message OpenResponse {
 
 message ForwardRequest {
   Tunnel tunnel = 1;
-  Remote remote = 2;
+  optional Remote remote = 2;
 }
 
 message ForwardResponse {
