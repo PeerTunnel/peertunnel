@@ -2,8 +2,6 @@
 
 Make your `localhost` public behind SSL/TLS!
 
-> # WIP
-
 ## How
 
 The protocol is simple.
@@ -18,7 +16,7 @@ When a remote-client connects, the server simply forwards the connection to the 
 
 ### Client
 
-First install and setup the peertunnel CLI _(WIP)_
+First install and setup the peertunnel CLI
 
 ```sh
 npm i -g peertunnel
@@ -34,10 +32,24 @@ peertunnel servers add /address/of/server "some-server" # first server will be r
 Now you can open tunnels
 
 ```sh
-peertunnel tunnel --suffix hello-world --port 3000
+peertunnel tunnel 3000
 ```
 
-### Server
+You can even add a suffix to the generated url
+
+```sh
+peertunnel tunnel --suffix mysuffix 3000
+```
+
+### Supported address types
+
+- A port. Example: `8080` (Host is always `localhost`)
+- An IPv4 address and port pair. Example: `127.0.0.1:8080`
+- An IPv6 address and port pair. Example: `[::1]:8080`
+- A hostname and port pair. Example: `localhost:80`
+- A TCP multiaddr. Example `/ip4/127.0.0.1/tcp/8080`
+
+## Server
 
 Requirements:
   - A server that is **NOT** running anything on port 443 (that means you can't use this server for hosting other websites and peertunnel at the same time)
@@ -52,7 +64,7 @@ npm i -g peertunnel
 Now cd into the directory you want to store the config in and enter `GENCONF=1 pt-server`.
 This will generate a config.json for you.
 
-#### Config
+### Config
 
   - `id`: This is the authentication key for the server. Leave it as-is.
   - `storage`: This is the storage directory for the db. Change it if you want to store the db somewhere else (directory will be created if it does not exist yet)
@@ -60,12 +72,12 @@ This will generate a config.json for you.
   - `publicAddr`: This is the address the server will listen on. You can likely leave it as-is.
   - `zone`: This is the domain peertunnel will use. You need to update the DNS entries accordingly (see DNS)
 
-#### DNS
+### DNS
 
 Your DNS-Provider **MUST** support Wildcard DNS.
 Set both the A and AAAA records of `peertunnel-domain` to the addresses of your server and then set a CNAME on `*.peertunnel-domain` to `peertunnel-domain` where `peertunnel-domain` is the domain you are using for peertunnel.
 
-#### Launching
+### Launching
 
 After that you can launch your server.
 
@@ -73,7 +85,7 @@ To do so simply cd into the directory you stored the config in and run `pt-serve
 
 If you're using sentry you can simply define `$SENTRY_DSN` before launching and all errors should be reported automatically (Don't forget to report them [here](https://github.com/mkg20001/peertunnel/issues), too)
 
-#### Certificate
+### Certificate
 
 **NOTE:** For this step to work your server must be already running!
 
