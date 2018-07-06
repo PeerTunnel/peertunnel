@@ -48,8 +48,9 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
   const cb = typeof a[a.length - 1] === 'function' ? a[a.length - 1] : log
 
   Handler(rpc, ...a).then((res) => {
-    if (!rpc.done()) { // if rest wasn't called, gc stream
-      // TODO: add
+    if (!rpc.done()) { // if rest wasn't called, close stream here
+      log('close stream')
+      pull(pull.values([]), rpc.rest(), pull.abort(true))
     }
 
     cb(null, res)

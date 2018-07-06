@@ -28,7 +28,5 @@ module.exports = {
         console.die('Failed to open tunnel: %s', err)
       }
     })
-
-    tunnel.stop()
   }
 }
