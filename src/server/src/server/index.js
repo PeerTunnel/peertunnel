@@ -33,7 +33,7 @@ class TLSServer {
 
       if (zone.user) {
         // open a tunnel
-        this.main.tunnels.requestTunnel(zone.user, { voidOnError: true, remote: socket.address() }, (err, remote) => { // the complete magic of this thing
+        this.main.tunnels.requestTunnel(zone.user, { voidOnError: true, remote: { address: socket.remoteAddress, port: socket.remotePort, family: socket.remoteFamily } }, (err, remote) => { // the complete magic of this thing
           if (err) { return log(err) } // shouldn't happen because voidOnError
           pull(conn, remote, conn)
           log('done forward')

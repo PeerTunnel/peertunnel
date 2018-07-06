@@ -51,7 +51,7 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
   Handler(rpc, ...a).then((res) => {
     if (!rpc.done()) { // if rest wasn't called, close stream here
       log('close stream')
-      pull(pull.values([]), rpc.rest(), pull.abort(true))
+      pull((end, cb) => cb(end || true), rpc.rest(), (read) => read(true, () => {}))
     }
 
     if (cb) { cb(null, res) }
