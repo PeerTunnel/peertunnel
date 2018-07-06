@@ -102,10 +102,10 @@ acme.sh will remember these settings and auto-update your cert. After the certif
 
 ## ToDos
 
-- [ ] Make it work
+- [x] Make it work
   - [x] Server
-  - [ ] Client
-    - [ ] User CMDs
+  - [x] Client
+    - [x] User CMDs
     - [x] Admin CMDs
 - [ ] Tests
 - [ ] Add bandwith quotas
