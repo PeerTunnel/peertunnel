@@ -1,3 +1,13 @@
+<a name="0.0.2"></a>
+## [0.0.2](https://github.com/mkg20001/peertunnel/compare/v0.0.1...v0.0.2) (2018-07-06)
+
+
+### Bug Fixes
+
+* make the suffix really a suffix ([29b3097](https://github.com/mkg20001/peertunnel/commit/29b3097))
+
+
+
 <a name="0.0.1"></a>
 ## 0.0.1 (2018-07-06)
 
