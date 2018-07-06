@@ -48,8 +48,8 @@ module.exports = {
       addr = multiaddr('/ip4/127.0.0.1/tcp/' + address)
     } else if ((match = address.match(/^((\d{1,3}\.){3,3}\d{1,3}):([0-9]{1,5})$/))) { // IP4:PORT
       addr = multiaddr('/ip4/' + match[1] + '/tcp/' + match[3])
-    } else if ((match = address.match(/^\[((::)?(((\d{1,3}\.){3}(\d{1,3}){1})?([0-9a-f]){0,4}:{0,2}){1,8}(::)?)\]:[0-9]{1,5}$/i))) { // [IP6]:PORT
-      addr = multiaddr('/ip6/' + match[1].toLowerCase() + '/tcp/' + match[7])
+    } else if ((match = address.match(/^\[((::)?(((\d{1,3}\.){3}(\d{1,3}){1})?([0-9a-f]){0,4}:{0,2}){1,8}(::)?)\]:([0-9]{1,5})$/i))) { // [IP6]:PORT
+      addr = multiaddr('/ip6/' + match[1].toLowerCase() + '/tcp/' + match[9])
     } else if ((match = address.match(/^((([a-zA-Z]|[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9])):([0-9]{1,5})$/i))) { // DNS:PORT
       addr = multiaddr('/dns/' + match[1].toLowerCase() + '/tcp/' + match[5])
     } else if (address.startsWith('/')) { // MULTIADDR
