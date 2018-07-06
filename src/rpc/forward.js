@@ -5,6 +5,7 @@ const log = debug('peertunnel:rpc:forward')
 
 const RPC = require('../common/rpc')
 const {ForwardRequest, ForwardResponse, Error} = require('../common/proto')
+const pull = require('pull-stream')
 
 module.exports = RPC(ForwardRequest, ForwardResponse, async (rpc, tunnels) => {
   const data = await rpc.read()
@@ -17,6 +18,15 @@ module.exports = RPC(ForwardRequest, ForwardResponse, async (rpc, tunnels) => {
     return rpc.write({error: Error.TUNNEL_MISSING})
   }
 
-  await rpc.write({}) // send OK
-  return tunnel.handler(rpc.rest(), remote)
+  let conn
+
+  try {
+    conn = await tunnel.handler(remote)
+  } catch (e) {
+    await rpc.write({error: e.code || Error.OTHER})
+    return
+  }
+
+  await rpc.write({})
+  pull(conn, rpc.rest(), conn)
 })

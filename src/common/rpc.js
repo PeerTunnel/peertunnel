@@ -45,7 +45,7 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
   const shake = stream.handshake
   const rpc = wrapper(shake, Recieve, Send)
 
-  const cb = typeof a[a.length - 1] === 'function' ? a[a.length - 1] : log
+  const cb = typeof a[a.length - 1] === 'function' && a[a.length - 1]
 
   Handler(rpc, ...a).then((res) => {
     if (!rpc.done()) { // if rest wasn't called, close stream here
@@ -53,8 +53,8 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
       pull(pull.values([]), rpc.rest(), pull.abort(true))
     }
 
-    cb(null, res)
-  }).catch((err) => cb(err))
+    if (cb) { cb(null, res) }
+  }).catch((err) => cb ? cb(err) : log(err))
 
   return stream
 }

@@ -33,10 +33,10 @@ class TLSServer {
 
       if (zone.user) {
         // open a tunnel
-        const conn = toPull(secureSocket)
         this.main.tunnels.requestTunnel(zone.user, { voidOnError: true }, (err, remote) => { // the complete magic of this thing
           if (err) { return log(err) } // shouldn't happen because voidOnError
           pull(conn, remote, conn)
+          log('done forward')
         })
       } else if (zone.main) {
         // TODO: if (http.wsUpgrade) connectToSwarmViaWS() else if (http) showHomepage() else drop()
@@ -76,7 +76,9 @@ class TLSServer {
     // Avoid uncaught errors caused by unstable connections
     socket.on('error', log)
     secureSocket.on('error', log)
+
     secureSocket.on('secureConnect', next)
+    const conn = toPull.duplex(secureSocket) // convert socket here to avoid these _funny_ "data got lost, you didn't pipe sync" bugs
   }
 
   async start () {
