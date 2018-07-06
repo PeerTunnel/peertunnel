@@ -39,30 +39,29 @@ if (config.genconf) {
     console.log('Created!')
     console.log('IMPORTANT: You need to edit this config before using it! Using the defaults will not work!')
   })
-  return
+} else {
+  console.log('Launching...')
+
+  if (!fs.existsSync(config.config)) { die('Config file %s not found', config.config) }
+  let conf
+  try {
+    conf = require(path.resolve(process.cwd(), config.config))
+  } catch (e) {
+    die('Error loading %s: %s', config.config, e)
+  }
+
+  if (!conf) { die('Config format error: Not an object') }
+  if (!conf.id) { die('Config format error: No PeerId (.id) found!') }
+
+  const Raven = require('raven')
+  Raven.config().install()
+
+  Instance(conf, {addrs: ['/ip4/0.0.0.0/tcp/32894']}, (err, swarm) => {
+    if (err) { die('Cannot create swarm: %s', err) }
+    conf.swarm = swarm
+    let server = new Server(conf)
+    server.start().then(() => {
+      server.swarm.peerInfo.multiaddrs.toArray().map(String).concat(['https://' + conf.zone + ':' + server.server.server.address().port]).forEach(addr => console.log('Listening on %s', addr))
+    }, err => die('Starting server failed: %s', err.stack))
+  })
 }
-
-console.log('Launching...')
-
-if (!fs.existsSync(config.config)) { die('Config file %s not found', config.config) }
-let conf
-try {
-  conf = require(path.resolve(process.cwd(), config.config))
-} catch (e) {
-  die('Error loading %s: %s', config.config, e)
-}
-
-if (!conf) { die('Config format error: Not an object') }
-if (!conf.id) { die('Config format error: No PeerId (.id) found!') }
-
-const Raven = require('raven')
-Raven.config().install()
-
-Instance(conf, {addrs: ['/ip4/0.0.0.0/tcp/32894']}, (err, swarm) => {
-  if (err) { die('Cannot create swarm: %s', err) }
-  conf.swarm = swarm
-  let server = new Server(conf)
-  server.start().then(() => {
-    server.swarm.peerInfo.multiaddrs.toArray().map(String).concat(['https://' + conf.zone + ':' + server.server.server.address().port]).forEach(addr => console.log('Listening on %s', addr))
-  }, err => die('Starting server failed: %s', err.stack))
-})
