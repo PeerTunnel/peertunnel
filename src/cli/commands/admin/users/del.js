@@ -9,7 +9,13 @@ module.exports = {
 
   description: 'Delete a user',
 
-  builder: yargs => yargs,
+  builder: {
+    id: {
+      desc: 'Id of user to delete',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, server, id} = argv

@@ -9,7 +9,18 @@ module.exports = {
 
   description: 'Add server',
 
-  builder: yargs => yargs,
+  builder: {
+    address: {
+      desc: 'Address(es) of server',
+      type: 'string',
+      required: true
+    },
+    name: {
+      desc: 'Name of server to add',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, address, name} = argv

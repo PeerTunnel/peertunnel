@@ -10,7 +10,18 @@ module.exports = {
 
   description: 'Update server certificate and key',
 
-  builder: yargs => yargs,
+  builder: {
+    cert: {
+      desc: 'Path to certificate',
+      type: 'file',
+      required: true
+    },
+    key: {
+      desc: 'Path to certificate key',
+      type: 'file',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, server, cert, key} = argv

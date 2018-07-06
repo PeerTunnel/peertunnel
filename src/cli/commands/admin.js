@@ -9,7 +9,8 @@ module.exports = {
 
   builder: yargs => yargs.commandDir('admin').option('server', {
     desc: 'Server to work on',
-    type: 'string'
+    type: 'string',
+    required: true
   }),
 
   handler (argv) {

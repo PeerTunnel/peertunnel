@@ -54,6 +54,17 @@ class Peertunnel {
     return peer
   }
 
+  async resolveServerDefault () {
+    const id = (await this.storage.getServers()).default
+    if (!id) {
+      throw new Error('No default server defined!')
+    }
+    const addrs = (await this.storage.getServer(id)).addrs
+    const peer = new Peer(Id.createFromB58String(id))
+    addrs.forEach(addr => peer.multiaddrs.add(addr))
+    return peer
+  }
+
   admin (pi, req, cb) {
     this.swarm.dialProtocol(pi, '/peertunnel/admin/1.0.0', (err, conn) => {
       if (err) { return cb(err) }

@@ -7,7 +7,13 @@ module.exports = {
 
   description: 'Set default server',
 
-  builder: yargs => yargs,
+  builder: {
+    name: {
+      desc: 'Name of server to set as default',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, name} = argv

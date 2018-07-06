@@ -7,7 +7,13 @@ module.exports = {
 
   description: 'Remove server',
 
-  builder: yargs => yargs,
+  builder: {
+    name: {
+      desc: 'Name of server to remove',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, name} = argv

@@ -7,7 +7,18 @@ module.exports = {
 
   description: 'Rename server',
 
-  builder: yargs => yargs,
+  builder: {
+    'prev-name': {
+      desc: 'Name of server to rename',
+      type: 'string',
+      required: true
+    },
+    'new-name': {
+      desc: 'Name to rename server into',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, prevName, newName} = argv

@@ -9,7 +9,18 @@ module.exports = {
 
   description: 'Set a user\'s username',
 
-  builder: yargs => yargs,
+  builder: {
+    id: {
+      desc: 'Id of user to change',
+      type: 'string',
+      required: true
+    },
+    username: {
+      desc: 'Username to set as users username',
+      type: 'string',
+      required: true
+    }
+  },
 
   async handler (argv) {
     const {tunnel, server, id, username} = argv
