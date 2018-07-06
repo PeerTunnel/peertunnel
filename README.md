@@ -39,8 +39,43 @@ peertunnel tunnel --suffix hello-world --port 3000
 
 ### Server
 
+Requirements:
+  - A server that is **NOT** running anything on port 443 (that means you can't use this server for hosting other websites and peertunnel at the same time)
+  - A domain with wildcard DNS
+
+First install peertunnel
+
+```
+npm i -g peertunnel
+```
+
+Now cd into the directory you want to store the config in and enter `GENCONF=1 pt-server`.
+This will generate a config.json for you.
+
+#### Config
+
+  - `id`: This is the authentication key for the server. Leave it as-is.
+  - `storage`: This is the storage directory for the db. Change it if you want to store the db somewhere else (directory will be created if it does not exist yet)
+  - `admins`: This is an array with the peer-ids of all admins. You should add your own id here. (Get it with `peertunnel id`)
+  - `publicAddr`: This is the address the server will listen on. You can likely leave it as-is.
+  - `zone`: This is the domain peertunnel will use. You need to update the DNS entries accordingly (see DNS)
+
+#### DNS
+
+Your DNS-Provider **MUST** support Wildcard DNS.
+Set both the A and AAAA records of `peertunnel-domain` to the addresses of your server and then set a CNAME on `*.peertunnel-domain` to `peertunnel-domain` where `peertunnel-domain` is the domain you are using for peertunnel.
+
+#### Launching
+
+After that you can launch your server.
+
+To do so simply cd into the directory you stored the config in and run `pt-server`
+
+If you're using sentry you can simply define `$SENTRY_DSN` before launching and all errors should be reported automatically (Don't forget to report them [here](https://github.com/mkg20001/peertunnel/issues), too)
 
 #### Certificate
+
+**NOTE:** For this step to work your server must be already running!
 
 First install acme.sh if not already installed:
 
@@ -55,7 +90,7 @@ Then get a wildcard cert for the domain
 $ acme.sh --issue --dns dns_PROVIDER -d peertunnel.example.com -d *.peertunnel.example.com
 ```
 
-You now need to add the server to your current machines peertunnel config and give the peer admin access.
+You now need to add the server to your current machine's peertunnel config and give the peer admin access if you haven't already.
 
 Then install the cert on your server
 
@@ -68,11 +103,11 @@ acme.sh will remember these settings and auto-update your cert. After the certif
 ## ToDos
 
 - [ ] Make it work
-  - [ ] Server
+  - [x] Server
   - [ ] Client
     - [ ] User CMDs
-    - [ ] Admin CMDs
-  - [ ] Tests
+    - [x] Admin CMDs
+- [ ] Tests
 - [ ] Add bandwith quotas
 - [ ] Use DIDs for Auth
 - [ ] Use peer-star / orbitdb / other storage for a replicated p2p db
