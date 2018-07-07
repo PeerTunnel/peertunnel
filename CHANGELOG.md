@@ -1,3 +1,13 @@
+<a name="0.0.3"></a>
+## [0.0.3](https://github.com/mkg20001/peertunnel/compare/v0.0.2...v0.0.3) (2018-07-07)
+
+
+### Bug Fixes
+
+* add colors dependency ([c675619](https://github.com/mkg20001/peertunnel/commit/c675619))
+
+
+
 <a name="0.0.2"></a>
 ## [0.0.2](https://github.com/mkg20001/peertunnel/compare/v0.0.1...v0.0.2) (2018-07-06)
 
