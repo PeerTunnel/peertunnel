@@ -1,6 +1,6 @@
 {
   "name": "peertunnel",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A libp2p based localhost tunneling application",
   "main": "index.js",
   "scripts": {

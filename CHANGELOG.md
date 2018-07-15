@@ -1,3 +1,13 @@
+<a name="0.0.4"></a>
+## [0.0.4](https://github.com/mkg20001/peertunnel/compare/v0.0.3...v0.0.4) (2018-07-15)
+
+
+### Bug Fixes
+
+* regex for suffixes ([fbebd13](https://github.com/mkg20001/peertunnel/commit/fbebd13))
+
+
+
 <a name="0.0.3"></a>
 ## [0.0.3](https://github.com/mkg20001/peertunnel/compare/v0.0.2...v0.0.3) (2018-07-07)
 
