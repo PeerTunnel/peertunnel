@@ -5,8 +5,9 @@ const log = debug('peertunnel:rpc:open')
 
 const RPC = require('../common/rpc')
 const {OpenRequest, OpenResponse, ETABLE} = require('../common/proto')
+const pull = require('pull-stream')
 
-module.exports = RPC(OpenResponse, OpenRequest, async (rpc, suffix, handler, tunnels) => {
+module.exports = RPC(OpenResponse, OpenRequest, async (rpc, suffix, handler, tunnels, onClose) => {
   log('sending open for suffix=%s', suffix)
   await rpc.write({suffix})
   const result = await rpc.read()
@@ -18,7 +19,17 @@ module.exports = RPC(OpenResponse, OpenRequest, async (rpc, suffix, handler, tun
 
   log('got tunnel %s', result.tunnel.address)
 
-  rpc.rest() // prevent stream from getting GC'd
+  const conn = rpc.rest()
+
+  pull(
+    (end, cb) => {},
+    conn,
+    pull.onEnd((err) => {
+      log('tunnel %s closed', result.tunnel.address, err)
+      delete tunnels.store[result.tunnel.forwardSecret]
+      onClose(err)
+    })
+  )
 
   return result.tunnel
 })

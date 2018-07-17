@@ -49,6 +49,9 @@ module.exports = RPC(OpenRequest, OpenResponse, async (rpc, pi, main) => {
   pull(
     (end, cb) => {},
     conn,
-    pull.onEnd(() => (online = false))
+    pull.onEnd(() => {
+      online = false
+      main.tunnels.gc()
+    })
   )
 })

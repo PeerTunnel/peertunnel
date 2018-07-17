@@ -18,8 +18,8 @@ const pull = require('pull-stream')
 const AdminRPC = require('./rpc/admin')
 
 class Peertunnel {
-  constructor () {
-    this.storage = new Storage(path.join(os.homedir(), '.peertunnel'))
+  constructor ({config}) {
+    this.storage = new Storage(config || path.join(os.homedir(), '.peertunnel'))
     this.tunnels = new Tunnels(this)
     this.admin = promisify(this.admin.bind(this))
   }

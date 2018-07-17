@@ -70,7 +70,12 @@ module.exports = {
       console.log('Incoming connection: %o'.blue.bold, remote || '<unknown remote address>')
       return dial(addr)
     }
-    tunnel.tunnels.createTunnel(pi, suffix, handler, (err, tunnel) => {
+
+    const onClose = () => {
+      console.die('Remote closed tunnel / Network issues')
+    }
+
+    tunnel.tunnels.createTunnel(pi, suffix, handler, onClose, (err, tunnel) => {
       if (err) {
         console.die('Failed to open tunnel: %s', err)
       }
