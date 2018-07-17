@@ -1,3 +1,13 @@
+<a name="0.0.5"></a>
+## [0.0.5](https://github.com/mkg20001/peertunnel/compare/v0.0.4...v0.0.5) (2018-07-17)
+
+
+### Features
+
+* better tunnel closing handling ([c3426c3](https://github.com/mkg20001/peertunnel/commit/c3426c3))
+
+
+
 <a name="0.0.4"></a>
 ## [0.0.4](https://github.com/mkg20001/peertunnel/compare/v0.0.3...v0.0.4) (2018-07-15)
 
