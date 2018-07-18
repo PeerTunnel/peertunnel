@@ -1,55 +1,21 @@
 'use strict'
 
-const lp = require('pull-length-prefixed')
+const PBRPC = require('pull-pb-rpc')
 const pull = require('pull-stream')
-const ppb = require('pull-protocol-buffers')
-const promisify = require('promisify-es6')
-const handshake = require('pull-handshake')
 const debug = require('debug')
 const log = debug('peertunnel:rpc')
 const {Error} = require('./proto')
 
-function wrapper (shake, Recieve, Send, opt) {
-  let done = false
-  return {
-    read: promisify((cb) => lp.decodeFromReader(shake, opt || {}, (err, data) => {
-      if (err) { return cb(err === true ? new Error('Connection dropped') : err) }
-      let res
-      try {
-        res = Recieve.decode(data)
-      } catch (err) {
-        return cb(err)
-      }
-      return cb(null, res)
-    })),
-    write: promisify((data, cb) => {
-      pull(
-        pull.values(Array.isArray(data) ? data : [data]),
-        ppb.encode(Send),
-        pull.collect((err, res) => {
-          if (err) { return cb(err) }
-          res.forEach(res => shake.write(res))
-          cb()
-        })
-      )
-    }),
-    rest: () => {
-      done = true
-      return shake.rest()
-    },
-    done: () => done
-  }
-}
-
 module.exports = (Recieve, Send, Handler) => (...a) => {
-  const stream = handshake()
-  const shake = stream.handshake
-  const rpc = wrapper(shake, Recieve, Send)
+  const stream = PBRPC()
+  const {rpc} = stream
+  rpc.write = rpc.write.bind(null, Send)
+  rpc.read = rpc.read.bind(null, Recieve)
 
   const cb = typeof a[a.length - 1] === 'function' && a[a.length - 1]
 
   Handler(rpc, ...a).then((res) => {
-    if (!rpc.done()) { // if rest wasn't called, close stream here
+    if (!rpc.rested()) { // if rest wasn't called, close stream here
       log('close stream')
       pull((end, cb) => cb(end || true), rpc.rest(), (read) => read(true, () => {}))
     }
@@ -60,7 +26,7 @@ module.exports = (Recieve, Send, Handler) => (...a) => {
       cb(err)
     } else {
       log(err)
-      if (!rpc.done()) { rpc.write({error: Error.OTHER}) } // if no cb assume we are server and send error via rpc
+      if (!rpc.rested()) { rpc.write({error: Error.OTHER}) } // if no cb assume we are server and send error via rpc
     }
   })
 
