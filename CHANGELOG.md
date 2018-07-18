@@ -1,3 +1,18 @@
+<a name="0.0.6"></a>
+## [0.0.6](https://github.com/mkg20001/peertunnel/compare/v0.0.5...v0.0.6) (2018-07-18)
+
+
+### Bug Fixes
+
+* tunnels getting gc'd too early ([bef482d](https://github.com/mkg20001/peertunnel/commit/bef482d))
+
+
+### Features
+
+* re-open tunnel if closed ([6c7bac1](https://github.com/mkg20001/peertunnel/commit/6c7bac1))
+
+
+
 <a name="0.0.5"></a>
 ## [0.0.5](https://github.com/mkg20001/peertunnel/compare/v0.0.4...v0.0.5) (2018-07-17)
 
