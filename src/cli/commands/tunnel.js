@@ -64,23 +64,28 @@ module.exports = {
       console.die('Address could not be decoded as PORT, IP4:PORT, [IP6]:PORT, DNS:PORT or MULTIADDR')
     }
 
-    console.log('Opening tunnel for %s...'.blue, String(addr).bold)
+    const openTunnel = () => {
+      console.log('Opening tunnel for %s...'.blue, String(addr).bold)
 
-    const handler = async (remote) => {
-      console.log('Incoming connection: %o'.blue.bold, remote || '<unknown remote address>')
-      return dial(addr)
-    }
-
-    const onClose = () => {
-      console.die('Remote closed tunnel / Network issues')
-    }
-
-    tunnel.tunnels.createTunnel(pi, suffix, handler, onClose, (err, tunnel) => {
-      if (err) {
-        console.die('Failed to open tunnel: %s', err)
+      const handler = async (remote) => {
+        console.log('Incoming connection: %o'.blue.bold, remote || '<unknown remote address>')
+        return dial(addr)
       }
 
-      console.log('Tunnel %s now open!'.green, ('https://' + tunnel.address).bold)
-    })
+      const onClose = () => {
+        console.log('Remote closed tunnel! Trying re-open in 1s...'.yellow)
+        setTimeout(openTunnel, 1000)
+      }
+
+      tunnel.tunnels.createTunnel(pi, suffix, handler, onClose, (err, tunnel) => {
+        if (err) {
+          console.die('Failed to open tunnel: %s', err)
+        }
+
+        console.log('Tunnel %s now open!'.green, ('https://' + tunnel.address).bold)
+      })
+    }
+
+    openTunnel()
   }
 }
