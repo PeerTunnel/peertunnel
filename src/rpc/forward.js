@@ -23,6 +23,9 @@ module.exports = RPC(ForwardRequest, ForwardResponse, async (rpc, tunnels) => {
   try {
     conn = await tunnel.handler(remote)
   } catch (e) {
+    if (typeof e.code === 'string') {
+      e.code = e.code === 'ECONNREFUSED' ? Error.CONN_ESTABLISH : Error.OTHER
+    }
     await rpc.write({error: e.code || Error.OTHER})
     return
   }

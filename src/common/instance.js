@@ -3,7 +3,7 @@
 const libp2p = require('libp2p')
 const TCP = require('libp2p-tcp')
 const WS = require('libp2p-websockets')
-const SPDY = require('libp2p-spdy')
+// const SPDY = require('libp2p-spdy')
 const MPLEX = require('libp2p-mplex')
 const SECIO = require('libp2p-secio')
 const defaultsDeep = require('@nodeutils/defaults-deep')
@@ -23,7 +23,7 @@ class Node extends libp2p {
           WS
         ],
         streamMuxer: [
-          SPDY,
+          // SPDY,
           MPLEX
         ],
         connEncryption: [

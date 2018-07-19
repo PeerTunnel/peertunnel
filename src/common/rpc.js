@@ -7,7 +7,7 @@ const log = debug('peertunnel:rpc')
 const {Error} = require('./proto')
 
 module.exports = (Recieve, Send, Handler) => (...a) => {
-  const stream = PBRPC()
+  const stream = PBRPC({timeout: 60 * 60 * 1000}) // TODO: fix for real
   const {rpc} = stream
   rpc.write = rpc.write.bind(null, Send)
   rpc.read = rpc.read.bind(null, Recieve)

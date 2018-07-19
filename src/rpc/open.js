@@ -22,11 +22,7 @@ module.exports = RPC(OpenResponse, OpenRequest, async (rpc, suffix, handler, tun
   const conn = rpc.rest()
 
   pull(
-    (end, cb) => {
-      if (!end) {
-        setTimeout(() => cb(null, Buffer.from('.')), 1000)
-      }
-    },
+    (end, cb) => {},
     conn,
     pull.onEnd((err) => {
       log('tunnel %s closed', result.tunnel.address, err)
