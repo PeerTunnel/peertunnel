@@ -1,3 +1,18 @@
+<a name="0.0.7"></a>
+## [0.0.7](https://github.com/mkg20001/peertunnel/compare/v0.0.6...v0.0.7) (2018-07-19)
+
+
+### Bug Fixes
+
+* add hack to fix tunnel closing issues ([82e8f36](https://github.com/mkg20001/peertunnel/commit/82e8f36))
+
+
+### Features
+
+* switch RPC to pull-pb-rpc ([930fb84](https://github.com/mkg20001/peertunnel/commit/930fb84))
+
+
+
 <a name="0.0.6"></a>
 ## [0.0.6](https://github.com/mkg20001/peertunnel/compare/v0.0.5...v0.0.6) (2018-07-18)
 
