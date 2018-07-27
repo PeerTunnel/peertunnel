@@ -105,10 +105,18 @@ function tokenizer (input) {
       }
       case 'condition': {
         let name = ''
+        let matcher = ''
         let value = ''
         while (cur().match(LETTER)) {
           name += cur()
           next()
+        }
+        if (cur() === ':') {
+          next()
+          while (cur().match(LETTER)) {
+            matcher += cur()
+            next()
+          }
         }
         if (cur() !== '/') {
           unexpected('/')
@@ -134,7 +142,7 @@ function tokenizer (input) {
           next()
         }
 
-        tokens.push({type: 'condition', name, value})
+        tokens.push({type: 'condition', name, matcher, value})
         type = 'main'
         break
       }
