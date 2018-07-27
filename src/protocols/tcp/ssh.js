@@ -7,14 +7,14 @@ module.exports = {
     }
   },
   detect: async (conn) => {
-    let version = String(await conn.read(4))
+    let version = String(await conn.read(5))
 
     if (version !== 'SSH-2') {
       return false
     }
 
     let next
-    while ((next = String(await conn.read(1)) !== '\n') { // TODO: add reading limit
+    while ((next = String(await conn.read(1)) !== '\n')) { // TODO: add reading limit
       version += next
     }
 
