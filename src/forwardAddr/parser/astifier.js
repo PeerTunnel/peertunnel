@@ -20,9 +20,7 @@ function astifier (tokens) {
         }
         return p
       }
-      case 'action': case 'condition': {
-        return cur()
-      }
+      case 'action': case 'condition': return cur()
       default: throw new TypeError(cur().type)
     }
   }
