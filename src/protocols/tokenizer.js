@@ -5,6 +5,44 @@
 const LETTER = /[a-z]/
 const ACTIONS = ['forward', 'stream']
 
+/*
+
+Explanation in pseudo-grammar:
+
+:main
+next /
+goto :token
+
+:token
+if next [a-z]
+  goto :main
+elif next .
+  goto :condition
+elif next _
+  goto :subproto
+
+:proto
+next [a-z0-9] $proto
+token protocol $proto
+next /
+goto :token
+
+:condition
+next [^/] $cond
+next /
+next [^/] $value
+token condition $cond $value
+next /
+goto :token
+
+:subproto
+next [a-z0-9] $subproto
+token subprotocol $subproto
+next /
+goto :token
+
+*/
+
 function tokenizer (input) {
   let current = 0
   let tokens = []
@@ -76,10 +114,26 @@ function tokenizer (input) {
           unexpected('/')
         }
         next()
-        while (cur().match(/[^/]/)) { // TODO: support escaping with quotes
-          value += cur()
+
+        let parseValue = true
+        let inQuotes = false
+        if (cur() === '"') {
+          inQuotes = true
           next()
         }
+
+        while (parseValue) {
+          if (cur() === '\\' && input[current + 1] === (inQuotes ? '"' : '/')) {
+            // do nothing...
+            next()
+          } else if (cur() === (inQuotes ? '"' : '/')) {
+            parseValue = false
+          } else {
+            value += cur()
+          }
+          next()
+        }
+
         tokens.push({type: 'condition', name, value})
         type = 'main'
         break
