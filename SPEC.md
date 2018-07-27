@@ -30,6 +30,23 @@ It consists of the following components:
 
   Forward simply streams the data as-is to the client
 
-Examples:
+### Examples:
 
-> WIP
+`/tcp/.port/443/ssl/.hostname/example.com/http/.path/"service/"/_ws/stream/` => `/ip4/127.0.0.1/tcp/8091`
+
+- Match incomming TCP connections on port 443
+- Match incomming SSL traffic with SNI-hostname `example.com`
+- Next action is another protocol so implictly call `.stream()` causing an SSL handshake to be done
+- Match incomming HTTP traffic on path `service/` which also matches websocket traffic
+- Explict `.stream()` call causing only the websocket traffic itself, not the HTTP-Upgrade headers to be sent to the client
+- Relay that traffic to `/ip4/127.0.0.1/tcp/8091`
+
+tl;dr `wss://example.com/service` => `tcp://localhost:8091`
+
+`/tcp/.port/5235/ssh/` => `/ip4/127.0.0.1/tcp/22`
+
+- Match incomming TCP connections on port 5235
+- Match incomming SSH traffic
+- Implict `/forward` causing raw SSH traffic to be sent to client
+
+tl;dr `ssh://example.com:5235` => `ssh://localhost`
