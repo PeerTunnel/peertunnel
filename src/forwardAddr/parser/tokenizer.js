@@ -143,7 +143,7 @@ function tokenizer (input) {
         }
 
         tokens.push({type: 'condition', name, matcher, value})
-        type = 'main'
+        type = cur() === '/' ? 'main' : 'token'
         break
       }
       default: throw new Error('Parser Error')

@@ -14,7 +14,7 @@ function astifier (tokens) {
       case 'proto': {
         let p = {type: 'protocol', protocol: cur().name, body: []}
         next()
-        while (cur() && cur().type !== 'protocol') {
+        while (cur() && cur().type !== 'proto') {
           p.body.push(walk())
           next()
         }
