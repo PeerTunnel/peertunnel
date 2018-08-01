@@ -10,7 +10,7 @@ Every module exposes the following APIs:
 - `.detect(conn)<Promise<False/Object>>`
   - This function reads some data from the stream then returns either false (meaning the connection does not use this protocol) or an object containing the values specified in `.properties`
 - `.stream(conn)<Promise<Connection>>`
-  - This functino takes an existing connection that has been detected to use this protocol and returns a raw data connection stripped of the data of the above protocol.
+  - This function takes an existing connection that has been detected to use this protocol and returns a raw data connection stripped of the data of the above protocol.
   - For SSL this means doing an SSL handshake and returning the underlying unencrypted socket
   - For WebSockets this means returning a raw connection without the HTTP-Upgrade headers, etc.
   - This does not have to be supported by all protocols

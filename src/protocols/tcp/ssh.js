@@ -8,9 +8,9 @@ module.exports = {
     }
   },
   detect: async (conn) => {
-    let version = String(await conn.read(5))
+    let version = String(await conn.read(7))
 
-    if (version !== 'SSH-2') {
+    if (version !== 'SSH-2.0') {
       return false
     }
 
