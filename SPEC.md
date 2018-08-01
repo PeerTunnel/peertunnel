@@ -2,9 +2,18 @@
 
 ## "Dissectors"
 
-WireShark-inspired dissectors
+WireShark-inspired dissector-like modules
 
-> WIP
+Every module exposes the following APIs:
+- `.properties`
+  - An object where the key represents the property name and the values the type and which matcher to use by default
+- `.detect(conn)<Promise<False/Object>>`
+  - This function reads some data from the stream then returns either false (meaning the connection does not use this protocol) or an object containing the values specified in `.properties`
+- `.stream(conn)<Promise<Connection>>`
+  - This functino takes an existing connection that has been detected to use this protocol and returns a raw data connection stripped of the data of the above protocol.
+  - For SSL this means doing an SSL handshake and returning the underlying unencrypted socket
+  - For WebSockets this means returning a raw connection without the HTTP-Upgrade headers, etc.
+  - This does not have to be supported by all protocols
 
 ## Forward Addresses
 
@@ -22,7 +31,7 @@ It consists of the following components:
 - Conditions `/.key/VALUE`
 
   A key/value condition that must match
-  Optionally a custom matching algorithm can be specified using `/.key:MATCH/VALUE` where `MATCH` can be one of `re/regex,st/strict,host,ip/address,port`
+  Optionally a custom matching algorithm can be specified using `/.key:MATCH/VALUE` where `MATCH` can be one of `regex`, `strict` or `glob`
 
 - Actions `/forward` or `/stream`
 
@@ -32,7 +41,7 @@ It consists of the following components:
 
 ### Examples:
 
-`/tcp/.port/443/ssl/.hostname/example.com/http/.path/"service/"/_ws/stream/` => `/ip4/127.0.0.1/tcp/8091`
+#### `/tcp/.port/443/ssl/.hostname/example.com/http/.path/"service/"/_ws/stream/` => `/ip4/127.0.0.1/tcp/8091`
 
 - Match incomming TCP connections on port 443
 - Match incomming SSL traffic with SNI-hostname `example.com`
@@ -43,7 +52,7 @@ It consists of the following components:
 
 tl;dr `wss://example.com/service` => `tcp://localhost:8091`
 
-`/tcp/.port/5235/ssh/` => `/ip4/127.0.0.1/tcp/22`
+#### `/tcp/.port/5235/ssh/` => `/ip4/127.0.0.1/tcp/22`
 
 - Match incomming TCP connections on port 5235
 - Match incomming SSH traffic
