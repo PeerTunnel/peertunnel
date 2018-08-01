@@ -3,7 +3,8 @@
 module.exports = {
   properties: {
     version: {
-      type: 'string'
+      type: 'string',
+      match: 'strict'
     }
   },
   detect: async (conn) => {

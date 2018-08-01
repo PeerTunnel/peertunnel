@@ -23,7 +23,7 @@ class Node extends libp2p {
           WS
         ],
         streamMuxer: [
-          // SPDY,
+          // SPDY, // TODO: debug some ECONNRESET bugs first
           MPLEX
         ],
         connEncryption: [
