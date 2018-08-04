@@ -26,9 +26,7 @@ message Remote {
 }
 
 
-message OpenRequest {
-  string suffix = 1;
-}
+message OpenRequest { }
 
 message OpenResponse {
   Error error = 1;

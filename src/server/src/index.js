@@ -75,7 +75,7 @@ class Server {
         handle: (conn, state) => {
           let hostname = state[1][1].hostname
           let zone = this.zones.filter(zone => hostname.endsWith('.' + zone))[0]
-          let userDomain = hostname.replace('.' + zone, '')
+          let userDomain = hostname.replace('.' + zone, '').split('.').pop()
           conn.getObservedAddrs((addr) => {
             this.tunnels.requestTunnel(userDomain, { voidOnError: true, remote: addr.nodeOptions() }, (err, remote) => { // the complete magic of this thing
               if (err) { return log(err) } // shouldn't happen because voidOnError

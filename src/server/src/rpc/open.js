@@ -8,11 +8,8 @@ const {OpenRequest, OpenResponse, Error} = require('../../../common/proto')
 const crypto = require('crypto')
 const pull = require('pull-stream')
 
-const ALLOWED_RE = /^[a-z0-9]+$/
-const MAX_LEN = 16
-
 module.exports = RPC(OpenRequest, OpenResponse, async (rpc, pi, main) => {
-  const request = await rpc.read()
+  // const request = await rpc.read()
 
   let user
   try {
@@ -22,25 +19,13 @@ module.exports = RPC(OpenRequest, OpenResponse, async (rpc, pi, main) => {
     return rpc.write({error: Error.NOT_AUTHORIZED})
   }
 
-  const { suffix } = request
-
-  log('got open (from=%s, suffix=%s)', pi.id.toB58String(), suffix)
-
-  let address = user.username
-
-  if (suffix) {
-    if (!suffix.match(ALLOWED_RE) || suffix.length > MAX_LEN) {
-      return rpc.write({error: Error.MALFORMED})
-    }
-
-    address = address + '-' + suffix
-  }
+  log('got open (from=%s)', pi.id.toB58String())
 
   let secret = crypto.randomBytes(16).toString('hex') // forward secret
 
   let online = true
 
-  const tunnel = main.tunnels.createTunnel(address, pi, secret, () => online)
+  const tunnel = main.tunnels.createTunnel(user.username, pi, secret, () => online)
 
   await rpc.write({tunnel})
 
