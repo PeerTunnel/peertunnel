@@ -3,32 +3,41 @@
 const debug = require('debug')
 const log = debug('peertunnel:server')
 
+const prom = (fnc) => new Promise((resolve, reject) => fnc((err, res) => err ? reject(err) : resolve(res)))
+
 const Storage = require('./storage')
 const Tunnels = require('./tunnels')
-const TLSServer = require('./server')
 
 const pull = require('pull-stream')
 const OpenRPC = require('./rpc/open')
 const AdminRPC = require('./rpc/admin')
 const multiaddr = require('multiaddr')
 
+const TCP = require('libp2p-tcp')
+const {sortingHat} = require('teletunnel-core')
+const fwAddr = require('forward-addr')
+const protocols = require('teletunnel-protocols')({})
+const fwAddrCustomCompare = (str, sslCompare) => {
+  let addr = fwAddr.validate(fwAddr.parse(str), protocols)
+  addr[1].conditions.hostname = {type: 'string', match: 'strict', value: sslCompare}
+}
+
 class Server {
-  constructor ({storage, publicAddr, swarm, admins, zone}) {
+  constructor ({storage, publicAddr, swarm, admins, zones, zone}) {
     this.swarm = swarm
     this.storage = new Storage(storage)
     this.tunnels = new Tunnels(this)
-    this.server = new TLSServer({addr: multiaddr(publicAddr), main: this})
+    this.publicAddr = multiaddr(publicAddr)
     this.admins = admins
-    this.zone = zone
-    this.zoneRe = new RegExp('^([a-z0-9-]+\\.){0,1}' + zone + '$')
-    this.zoneUserRe = new RegExp('^([a-z0-9-]+)\\.' + zone + '$')
-    this.zoneMainRe = new RegExp('^' + zone + '$')
+    this.zones = zones || [zone]
+
+    const tcp = new TCP()
+    this.server = tcp.createListener(conn => sortingHat(conn, {protocols, handlers: this.handlers}))
   }
 
   async start () {
     this.settings = await this.storage.getGlobal()
-    this.cert = await this.storage.getCert()
-    await this.server.start()
+    await prom(cb => this.server.listen(this.publicAddr, cb))
     this.swarm.handle('/peertunnel/open/1.0.0', (proto, conn) => {
       conn.getPeerInfo((err, pi) => {
         if (err) { return log(err) }
@@ -53,12 +62,34 @@ class Server {
     })
   }
 
-  async stop () {
-
+  static get handlers () {
+    return [
+      { // main domain
+        address: fwAddrCustomCompare('/tcp/ssl' /* + /http/_ws/stream */, (value) => this.zones.indexOf(value) !== -1),
+        handle: (conn) => {
+          // TODO: emit swarm conn event
+        }
+      },
+      { // user domains
+        address: fwAddrCustomCompare('/tcp/ssl', (value) => this.zones.filter(zone => value.endsWith('.' + zone))),
+        handle: (conn, state) => {
+          let hostname = state[1][1].hostname
+          let zone = this.zones.filter(zone => hostname.endsWith('.' + zone))[0]
+          let userDomain = hostname.replace('.' + zone, '')
+          conn.getObservedAddrs((addr) => {
+            this.tunnels.requestTunnel(userDomain, { voidOnError: true, remote: addr.nodeOptions() }, (err, remote) => { // the complete magic of this thing
+              if (err) { return log(err) } // shouldn't happen because voidOnError
+              pull(conn, remote, conn)
+              log('done forward')
+            })
+          })
+        }
+      }
+    ]
   }
 
-  isInZone (domain) {
-    return Boolean(domain.match(this.zoneRe))
+  async stop () {
+    // TODO: close all conns
   }
 }
 

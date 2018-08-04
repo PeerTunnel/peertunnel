@@ -77,24 +77,17 @@ module.exports = RPC(AdminRequest, AdminResponse, async (rpc, pi, admins, main) 
       }
     }
   } else {
-    const settings = main.settings
+    // const settings = main.settings
     switch (req.type) {
       case OP.SET: {
         switch (req.key) {
-          case 'cert':
-          case 'key':
-            main.cert[req.key] = req.value
-            if (main.cert.cert && main.cert.key) { // eslint-disable-line
-              await main.cert.save()
-            }
-            break
           default: {
             return rpc.write({error: Error.MALFORMED})
           }
         }
 
-        await settings.save()
-        break
+        /* await settings.save()
+        break */
       }
       default: {
         return rpc.write({error: Error.MALFORMED})
